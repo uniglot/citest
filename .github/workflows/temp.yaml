@@ -1,0 +1,29 @@
+name: Fill JSON blanks
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  FOO: 1024
+  BAR: 2048
+
+jobs:
+  fill_json:
+    name: Fill in the blanks in the given JSON file
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: JQ
+      id: temp-path
+      run: |
+        jq '.foo=${{ env.FOO }} | .bar=${{ env.BAR }}' test.json > ${{ runner.temp }}/temp.json
+        echo ""
+
+    - name: Echo
+      run: |
+        cat ${{ runner.temp }}/temp.json
